@@ -45,18 +45,32 @@ function processVideo() {
         cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
         
         // Arucoマーカーの検出
-        let dictionary = new cv.aruco.Dictionary_get(cv.aruco.DICT_4X4_50);
+        let dictionaries = [cv.aruco.DICT_4X4_50, cv.aruco.DICT_4X4_100, cv.aruco.DICT_4X4_250, cv.aruco.DICT_4X4_1000];
+        let dictionary = null;
+        for (let dict of dictionaries) {
+            dictionary = new cv.aruco.Dictionary_get(dict);
+            let cornersTemp = new cv.MatVector();
+            let idsTemp = new cv.Mat();
+            cv.aruco.detectMarkers(gray, dictionary, cornersTemp, idsTemp, parameters);
+            if (idsTemp.rows > 0) {
+                corners = cornersTemp;
+                ids = idsTemp;
+                break;
+            }
+        }
+
         let parameters = new cv.aruco.DetectorParameters();
         parameters.minDistanceToBorder = 3;
         parameters.adaptiveThreshWinSizeMin = 3;
         parameters.adaptiveThreshWinSizeMax = 23;
         parameters.adaptiveThreshWinSizeStep = 10;
-        parameters.minMarkerPerimeterRate = 0.03;
-        parameters.maxMarkerPerimeterRate = 4.0;
+        parameters.minMarkerPerimeterRate = 0.05;
+        parameters.maxMarkerPerimeterRate = 2.0;
         parameters.polygonalApproxAccuracyRate = 0.05;
-        parameters.minCornerDistanceRate = 0.05;
+        parameters.minCornerDistanceRate = 0.1;
         parameters.minMarkerDistanceRate = 0.05;
         parameters.minOtsuStdDev = 5.0;
+
         let corners = new cv.MatVector();
         let ids = new cv.Mat();
 
@@ -64,12 +78,13 @@ function processVideo() {
 
         // 検出されたマーカーの表示
         if (ids.rows > 0) {
-            document.getElementById("result").innerText += "\nArucoマーカーが認識されました。";
+            console.log(`認識されたマーカーID: ${ids.data32S}`);
+            document.getElementById("result").innerText = `現在の積雪量: ${snowDepth} cm\nArucoマーカーが認識されました。\n認識されたマーカーID: ${ids.data32S}`;
             // マーカーに緑色の外枠を表示
             cv.aruco.drawDetectedMarkers(src, corners, ids, new cv.Scalar(0, 255, 0));
             // マーカーの位置からスケールを基に積雪量の推定を行う処理
             let snowDepth = calculateSnowDepth(ids, corners);
-            document.getElementById("result").innerText = `現在の積雪量: ${snowDepth} cm\nArucoマーカーが認識されました。`;
+            document.getElementById("result").innerText = `現在の積雪量: ${snowDepth} cm`;
         } else {
             document.getElementById("result").innerText = "Arucoマーカーが見つかりませんでした。";
         }
@@ -82,7 +97,7 @@ function processVideo() {
 
 function calculateSnowDepth(ids, corners) {
     // マーカーIDが0番であることを確認
-    if (ids.data32S[0] === 0) {
+    if (ids.rows > 0 && ids.data32S[0] === 0) {
         // コーナー情報から目盛りがどこまで隠れているかを計算する（簡易的な仮実装）
         // ここで積雪の高さを推測する処理を記述
         // 例えば、特定の高さで目盛りが隠れている部分を基に計算する
