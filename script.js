@@ -3,7 +3,7 @@ let canvas = document.getElementById("canvasOutput");
 let context = canvas.getContext("2d");
 
 function onOpenCvReady() {
-    if (cv.getBuildInformation) {
+    if (typeof cv !== 'undefined' && cv.getBuildInformation) {
         console.log("OpenCV is ready");
         startCamera();
     } else {
