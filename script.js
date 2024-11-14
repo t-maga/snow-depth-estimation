@@ -3,9 +3,11 @@ let canvas = document.getElementById("canvasOutput");
 let context = canvas.getContext("2d");
 
 function onOpenCvReady() {
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+    console.log("OpenCV is ready");
+    navigator.mediaDevices.getUserMedia({ video: true })
         .then(function (stream) {
             video.srcObject = stream;
+            console.log("Camera stream started");
         })
         .catch(function (err) {
             console.error("Error accessing camera: " + err);
@@ -13,6 +15,7 @@ function onOpenCvReady() {
         });
 
     video.addEventListener('play', function() {
+        console.log("Video is playing");
         processVideo();
     });
 }
