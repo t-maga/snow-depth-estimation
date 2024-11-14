@@ -3,12 +3,13 @@ let canvas = document.getElementById("canvasOutput");
 let context = canvas.getContext("2d");
 
 function onOpenCvReady() {
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } } })
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
         .then(function (stream) {
             video.srcObject = stream;
         })
         .catch(function (err) {
             console.error("Error accessing camera: " + err);
+            alert("カメラへのアクセスに失敗しました: " + err.message);
         });
 
     video.addEventListener('play', function() {
