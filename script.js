@@ -13,7 +13,7 @@ function onOpenCvReady() {
 }
 
 function startCamera() {
-    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: { ideal: "environment" } } })
         .then(function (stream) {
             video.srcObject = stream;
             console.log("Camera stream started");
