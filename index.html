@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snow Depth Measurement</title>
+</head>
+<body>
+    <h1>積雪量の推定</h1>
+    <video id="videoInput" width="640" height="480" autoplay></video>
+    <canvas id="canvasOutput" width="640" height="480"></canvas>
+    <div id="result">現在の積雪量: - cm</div>
+
+    <!-- OpenCV.jsの読み込み -->
+    <script async src="https://docs.opencv.org/4.x/opencv.js" onload="onOpenCvReady();"></script>
+    <script src="script.js"></script>
+</body>
+</html>
