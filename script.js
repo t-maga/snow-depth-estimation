@@ -3,8 +3,17 @@ let canvas = document.getElementById("canvasOutput");
 let context = canvas.getContext("2d");
 
 function onOpenCvReady() {
-    console.log("OpenCV is ready");
-    navigator.mediaDevices.getUserMedia({ video: true })
+    if (cv.getBuildInformation) {
+        console.log("OpenCV is ready");
+        startCamera();
+    } else {
+        console.error("Failed to load OpenCV.js");
+        alert("OpenCV.jsの読み込みに失敗しました。");
+    }
+}
+
+function startCamera() {
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: "environment" } })
         .then(function (stream) {
             video.srcObject = stream;
             console.log("Camera stream started");
@@ -28,6 +37,10 @@ function processVideo() {
 
     const FPS = 30;
     function processFrame() {
+        if (video.paused || video.ended) {
+            return;
+        }
+
         cap.read(src);
         cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
         
