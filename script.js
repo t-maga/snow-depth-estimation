@@ -45,8 +45,8 @@ function processVideo() {
         cv.cvtColor(src, gray, cv.COLOR_RGBA2GRAY);
         
         // Arucoマーカーの検出
-        let dictionary = new cv.aruco_Dictionary(cv.DICT_4X4_50);
-        let parameters = new cv.aruco_DetectorParameters();
+        let dictionary = new cv.aruco.Dictionary_get(cv.aruco.DICT_4X4_50);
+        let parameters = new cv.aruco.DetectorParameters();
         parameters.minDistanceToBorder = 3;
         parameters.adaptiveThreshWinSizeMin = 3;
         parameters.adaptiveThreshWinSizeMax = 23;
@@ -57,14 +57,13 @@ function processVideo() {
         parameters.minCornerDistanceRate = 0.05;
         parameters.minMarkerDistanceRate = 0.05;
         parameters.minOtsuStdDev = 5.0;
-        let detector = new cv.aruco_Detector(dictionary, parameters);
         let corners = new cv.MatVector();
         let ids = new cv.Mat();
 
-        detector.detectMarkers(gray, corners, ids);
+        cv.aruco.detectMarkers(gray, dictionary, corners, ids, parameters);
 
         // 検出されたマーカーの表示
-        if (!ids.empty()) {
+        if (ids.rows > 0) {
             // マーカーに緑色の外枠を表示
             cv.aruco.drawDetectedMarkers(src, corners, ids, new cv.Scalar(0, 255, 0));
             // マーカーの位置からスケールを基に積雪量の推定を行う処理
