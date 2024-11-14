@@ -47,6 +47,16 @@ function processVideo() {
         // Arucoマーカーの検出
         let dictionary = new cv.aruco_Dictionary(cv.DICT_4X4_50);
         let parameters = new cv.aruco_DetectorParameters();
+        parameters.minDistanceToBorder = 3;
+        parameters.adaptiveThreshWinSizeMin = 3;
+        parameters.adaptiveThreshWinSizeMax = 23;
+        parameters.adaptiveThreshWinSizeStep = 10;
+        parameters.minMarkerPerimeterRate = 0.03;
+        parameters.maxMarkerPerimeterRate = 4.0;
+        parameters.polygonalApproxAccuracyRate = 0.05;
+        parameters.minCornerDistanceRate = 0.05;
+        parameters.minMarkerDistanceRate = 0.05;
+        parameters.minOtsuStdDev = 5.0;
         let detector = new cv.aruco_Detector(dictionary, parameters);
         let corners = new cv.MatVector();
         let ids = new cv.Mat();
