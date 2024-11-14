@@ -64,11 +64,12 @@ function processVideo() {
 
         // 検出されたマーカーの表示
         if (ids.rows > 0) {
+            document.getElementById("result").innerText += "\nArucoマーカーが認識されました。";
             // マーカーに緑色の外枠を表示
             cv.aruco.drawDetectedMarkers(src, corners, ids, new cv.Scalar(0, 255, 0));
             // マーカーの位置からスケールを基に積雪量の推定を行う処理
             let snowDepth = calculateSnowDepth(ids, corners);
-            document.getElementById("result").innerText = `現在の積雪量: ${snowDepth} cm`;
+            document.getElementById("result").innerText = `現在の積雪量: ${snowDepth} cm\nArucoマーカーが認識されました。`;
         } else {
             document.getElementById("result").innerText = "Arucoマーカーが見つかりませんでした。";
         }
