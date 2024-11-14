@@ -3,7 +3,7 @@ let canvas = document.getElementById("canvasOutput");
 let context = canvas.getContext("2d");
 
 function onOpenCvReady() {
-    navigator.mediaDevices.getUserMedia({ video: true })
+    navigator.mediaDevices.getUserMedia({ video: { facingMode: { exact: "environment" } } })
         .then(function (stream) {
             video.srcObject = stream;
         })
